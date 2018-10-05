@@ -1,0 +1,256 @@
+\documentclass{article}
+% These packages are used by latex to generate the tex document
+
+\usepackage{graphicx, verbatim}
+\usepackage{amsmath}
+\usepackage{amscd}
+\usepackage{lipsum}
+\usepackage{enumitem}
+\usepackage{todonotes}
+\usepackage[tableposition=top]{caption}
+\usepackage{ifthen}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{listings}
+\usepackage{inconsolata}
+\usepackage{url}
+\setlength{\textwidth}{6.5in} 
+\setlength{\textheight}{9in}
+\setlength{\oddsidemargin}{0in} 
+\setlength{\evensidemargin}{0in}
+\setlength{\topmargin}{-1.5cm}
+\setlength{\parindent}{0cm}
+\usepackage{setspace}
+\usepackage{float}
+\usepackage{setspace}
+\usepackage{float}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks   = true, %Colours links instead of ugly boxes
+  urlcolor     = blue, %Colour for external hyperlinks
+  linkcolor    = blue, %Colour of internal links
+  citecolor   = red %Colour of citations
+}
+\begin{document}
+
+
+% Title and Author Name (you can edit)
+\title{How to Add Code \& Results to Your Document \\ Introduction to R Lab (1)}
+\author{Eyad Elyan}
+
+\maketitle
+
+\section{Overview}
+
+R is a free and open sourc software that can be used in its own. But with RStudio things can be a bit easier. To use R, you need to have it installed on your machine form the R\footnote{\href{https://www.r-project.org/}{https://www.r-project.org/}} website. This tutorial aims at providing you with:
+
+\begin{itemize}
+\item Quick introduction to R and Studio 
+\item Introduction to a very important and useful feature which is \textit{R Sweave}. 
+\end{itemize}
+
+
+
+\section{Quick Intro to R}
+
+R is uses a command line based environment. In other words, you have to type commands rather than using Wizards, which allows you to do interactive and iterative exploration and analysis of data.If you open RStudio, you will notice that it is divided to four sub windows, bottom left window which is the console window, the editor window at the top left, the history window/environment on the top-right and bottom right is for plots, files and packages. We will explore this in depth during this module.  \\
+
+
+You can either type commands in the console, or in the script window. It is good to use the scrip window, type your commands and save. To execute the command, you can simply select it and click the run button on the top righ corner of the script window, or simly press \textit{ctrl+enter} while the cursor is at the line of that command. \\
+
+The ver first step, is to set your working directory, or your current directory where you have your files, datasets, etc...: 
+
+<<eval=TRUE>>=
+currdir <- getwd()
+setwd(currdir)
+@
+
+%Default engine is 'R' 
+\subsection{Vectors in R}
+Vectors are considered the first building block in R, easy to define, populate and subset. The main requirement is that vectors must have the same data type i.e. vectors of integers, vectors of characters, and so on. Consider the following statements (you can type them in the console window, or in the script window in RStudio): 
+
+
+<<vectorChunk1, echo=TRUE,eval=FALSE>>=
+# create some vectors
+ints <- c(1,2,3,4,5)
+ints1 <- c(1:10)
+ints2 <- seq(1,10,by=2)
+doubles <- seq(from=0,to=10,by=2.5)
+chars <- character()
+chars[1] <- "e"
+chars <- c(chars,"s")
+
+# print vectors components
+ints;ints1;ints2; chars;doubles
+@
+Check the output
+<<vectorChunk1Eval, echo=FALSE,eval=TRUE,comment=NA>>=
+
+ints <- c(1,2,3,4,5)
+ints1 <- c(1:10)
+ints2 <- seq(1,10,by=2)
+doubles <- seq(from=0,to=10,by=2.5)
+chars <- character()
+chars[1] <- "e"
+chars <- c(chars,"s")
+
+# print vectors components
+ints;ints1;ints2; chars;doubles
+@
+
+
+The components of the vector sumxy should be now:
+<<sumvectors1,echo=FALSE>>=
+
+sumxy <- x + y 
+sumxy
+@
+
+\subsection{Matrices}
+
+You can think of matrices as a two-dimensional vector. To define a matrix we use the function matrix as follows: 
+<<defineMat>>=
+# 4 x 4 matrix 
+myMat <- matrix (data=c(1:16),ncol = 4)
+@
+
+The argument data specifies which numbers should be in the matrix. Use either \textbf{ncol} to specify the number of columns or \textbf{nrow} to specify the number of rows. If you now type \textit{myMat} in the console you should get the following results:
+<<defineMatE,echo=FALSE,comment=NA>>=
+# 4 x 4 matrix 
+myMat 
+@
+
+Some times you may need to access specific elements in the matrix:
+
+<<accessMatrixElements,eval=FALSE>>=
+
+myMat[1,1]# the element at row 1, column 1
+myMat[4,4]# 
+
+# check matrix dimension
+dim(myMat)
+# sum the elements at the diagonal of the matrix 
+sum(diag(myMat))
+@
+
+\textbf{Task:} Create a vector of 40 elements (i.e. 1:40) and put it in a 10 x 4 matrix
+<<eval=FALSE>>=
+myv <- c(1:40)
+mymat <- matrix(data=myv, nrow=10)
+@
+
+\subsection{Data Frames}
+
+Data Frames are very useful data structure in R, although similar to matrices, they are much more flexible in terms of allow access to elements, columns, features, etc… Lets start by defining some vectors and then put them in a data frame: 
+
+<<dataframe1,eval=FALSE>>=
+stIds <- c(1,2,3,4,5)
+stNames<- c("St1","St2","St3","St4","St5")
+stGrades<-c("Excellent","Good","Bad","Really Bad","Really Really Bad")
+
+# create a data frame to combine the above vectors 
+df <- data.frame(student_id=stIds,student_name=stNames,student_grades=stGrades)
+
+# print the data frame without row numbers 
+print(df,row.names = FALSE )
+ 
+@
+
+The output of the above code is a data frame that combines all vectors: 
+<<dataframe11,echo=FALSE,comment=NA>>=
+
+stIds <- c(1,2,3,4,5)
+stNames<- c("St1","St2","St3","St4","St5")
+stGrades<-c("Excellent","Good","Bad","Really Bad","Really Really Bad")
+
+# create a data frame to combine the above vectors 
+df <- data.frame(student_id=stIds,student_name=stNames,student_grades=stGrades,
+                 stringsAsFactors = FALSE)
+print(df,row.names = FALSE )
+@
+
+There are so many operations that we can do with a data frame, here are some and we will cover more through the entire course/ not only this module:
+<<dfOperations,eval=FALSE>>=
+names(df) # pint out the column names of the data frame
+head(df)  # show the first few rows
+
+# subsetting: is very important operation on data frame 
+
+# hide the student name
+df[,c(1,3)]
+
+# show records where students grades is "Bad"
+df[df$studeng_grades=="Bad",]
+@
+
+You can also carry some mathematical operations on some of the columns of the data frame (numeric ones):
+<<dfOperationsM,eval=FALSE>>=
+# add a new column to the data frame
+df$gpa <- NULL
+# generate some numbers between 40 and 90 and add it to the gpa column 
+df$gpa <- runif(1:nrow(df),40,90)
+
+# print data frame contents
+print(df,row.names = FALSE )
+
+@
+
+Now if you execute the above code, you will then get the following results: 
+<<echo=FALSE>>=
+# add a new column to the data frame
+df$gpa <- NULL
+# generate some numbers between 40 and 90 and add it to the gpa column 
+df$gpa <- runif(1:nrow(df),40,90)
+
+# print data frame contents
+print(df,row.names = FALSE )
+
+@
+
+Now, lets do some basic math operations on the \textit{gpa} column in our data frame
+<<>>=
+avgGPA <- mean(df$gpa)
+lowestGPA <- min(df$gpa)
+maxGPA <- max(df$gpa)
+@
+
+You can print the results as follows: 
+<<eval=FALSE>>=
+cat("Average GPA is: \t",avgGPA)
+cat("Min GPA is: \t",lowestGPA)
+cat("Max GPA is: \t",maxGPA)
+@
+
+
+
+# function definition
+squareVector <- function (x) {
+    return (x*x)
+}
+
+# call function
+squaredX <- squareVector(myNumbers)
+@
+
+
+% the \begin end figure is latex command 
+\begin{figure}[H] %start a figure
+\begin{center}
+
+\section{Tasks}
+
+\begin{itemize}
+
+\item Edit the \textit{.Rnw} file by setting the author name to your name
+\item Edit the \textit{.Rnw} file by changing the title of the document 
+\item Add a caption and a label to the table above (\textbf{hint}: check the first table latex code in .Rnw file)
+
+
+\item In order to be able to work with \textit{knitr} documents you need to develop some basic knowledge in Latex. Please refer to the introductory latex document on Moodle
+
+\item More on \textit{knitr} package can be found on the links provided on Moodle (this week materials)
+
+\end{itemize}
+\end{document}
+
