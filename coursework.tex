@@ -1,18 +1,21 @@
 \documentclass[12pt]{article}         % the type of document and font size (default 10pt)
+\usepackage[noae]{Sweave} 
+\usepackage{arev}
 \usepackage[margin=1.0in]{geometry}   % sets all margins to 1in, can be changed
 \usepackage{moreverb}                 % for verbatimtabinput -- LaTeX environment
 \usepackage{url}                      % for \url{} command
 \usepackage{amssymb}                  % for many mathematical symbols
 \usepackage[pdftex]{lscape}           % for landscaped tables
 \usepackage{longtable}                % for tables that break over multiple pages
+
 \title{\Huge Title of Coursework \\[0.5in] \large CM3111: Big Data Analysis Coursework \\[2in]}  % to specify title
 
 \author{Eilidh Southren \\[0.25in] Student ID: 1513195\\[3in]}          % to specify author(s)
 
 \date{November 2018}
-\usepackage{Sweave}
 \begin{document}                      % document begins here
 \input{coursework-concordance}
+
 
 % If .nw file contains graphs: To specify that EPS/PDF graph files are to be 
 % saved to 'graphics' sub-folder
@@ -43,8 +46,8 @@ If you want to see both the input and output, do this:
 > runif(10)
 \end{Sinput}
 \begin{Soutput}
- [1] 0.7294830 0.6171384 0.2868468 0.8641063 0.8033892 0.3448469 0.7694435
- [8] 0.9101910 0.8145743 0.9859595
+ [1] 0.951700400 0.147350547 0.656194884 0.009407798 0.678570091 0.800007238
+ [7] 0.383267459 0.311992274 0.142615642 0.402582072
 \end{Soutput}
 \end{Schunk}
 
@@ -52,8 +55,8 @@ If you want to see output, but no input, do this:
 
 \begin{Schunk}
 \begin{Soutput}
- [1] 0.25210551 0.25965330 0.26975267 0.35695254 0.08549717 0.65365451
- [7] 0.24909594 0.67897609 0.02640378 0.22510347
+ [1] 0.87171162 0.15202862 0.76866646 0.53133333 0.70905597 0.07119464
+ [7] 0.85124164 0.21932358 0.30450789 0.91938220
 \end{Soutput}
 \end{Schunk}
 
@@ -83,8 +86,8 @@ and you can double-check that it worked later (if you like)
 > y
 \end{Sinput}
 \begin{Soutput}
- [1] 0.5095516 0.6010161 0.4196946 0.5488765 0.2330574 0.4130772 0.8872260
- [8] 0.8359316 0.8522625 0.1369938
+ [1] 0.4527397 0.7465630 0.3143172 0.6611272 0.4862785 0.6339000 0.7735888
+ [8] 0.3827385 0.3238573 0.2071869
 \end{Soutput}
 \end{Schunk}
 
@@ -113,15 +116,15 @@ Sometimes we would like the output to look like \LaTeX\ output instead of \texts
 > xtable(summary(lm(y ~ x)), caption = "Here is the table we made")
 \end{Sinput}
 % latex table generated in R 3.5.1 by xtable 1.8-3 package
-% Fri Oct 05 22:12:01 2018
+% Fri Oct 19 15:31:55 2018
 \begin{table}[ht]
 \centering
 \begin{tabular}{rrrrr}
   \hline
  & Estimate & Std. Error & t value & Pr($>$$|$t$|$) \\ 
   \hline
-(Intercept) & 0.4775 & 0.2123 & 2.25 & 0.0546 \\ 
-  x & 0.0102 & 0.0299 & 0.34 & 0.7417 \\ 
+(Intercept) & 0.6693 & 0.1489 & 4.49 & 0.0020 \\ 
+  x & -0.0263 & 0.0210 & -1.26 & 0.2446 \\ 
    \hline
 \end{tabular}
 \caption{Here is the table we made} 

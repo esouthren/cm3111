@@ -1,10 +1,13 @@
 \documentclass[12pt]{article}         % the type of document and font size (default 10pt)
+\usepackage[noae]{Sweave} 
+\usepackage{arev}
 \usepackage[margin=1.0in]{geometry}   % sets all margins to 1in, can be changed
 \usepackage{moreverb}                 % for verbatimtabinput -- LaTeX environment
 \usepackage{url}                      % for \url{} command
 \usepackage{amssymb}                  % for many mathematical symbols
 \usepackage[pdftex]{lscape}           % for landscaped tables
 \usepackage{longtable}                % for tables that break over multiple pages
+
 \title{\Huge Title of Coursework \\[0.5in] \large CM3111: Big Data Analysis Coursework \\[2in]}  % to specify title
 
 \author{Eilidh Southren \\[0.25in] Student ID: 1513195\\[3in]}          % to specify author(s)
@@ -12,6 +15,7 @@
 \date{November 2018}
 \begin{document}                      % document begins here
 \SweaveOpts{concordance=TRUE}
+
 
 % If .nw file contains graphs: To specify that EPS/PDF graph files are to be 
 % saved to 'graphics' sub-folder
