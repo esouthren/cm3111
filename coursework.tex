@@ -1,4 +1,4 @@
-\documentclass[12pt]{article}         % the type of document and font size (default 10pt)
+\documentclass[10pt]{article}         % the type of document and font size (default 10pt)
 \usepackage[noae]{Sweave} 
 \usepackage{arev}
 \usepackage[margin=1.0in]{geometry}   % sets all margins to 1in, can be changed
@@ -7,6 +7,8 @@
 \usepackage{amssymb}                  % for many mathematical symbols
 \usepackage[pdftex]{lscape}           % for landscaped tables
 \usepackage{longtable}                % for tables that break over multiple pages
+%\usepackage{caret}
+\usepackage{float}
 
 \title{\Huge Title of Coursework \\[0.5in] \large CM3111: Big Data Analysis Coursework \\[2in]}  % to specify title
 
@@ -15,7 +17,6 @@
 \date{November 2018}
 \begin{document}                      % document begins here
 \input{coursework-concordance}
-
 
 % If .nw file contains graphs: To specify that EPS/PDF graph files are to be 
 % saved to 'graphics' sub-folder
@@ -29,6 +30,14 @@
 
 \maketitle              % makes the title
 \pagebreak
+\topskip0pt
+\vspace*{\fill}
+
+
+\begin{center}{How do you tell poisonous mushrooms from edible ones?  \\[0.25in]You give them to your little brother to eat first.}\end{center}
+\vspace*{\fill}
+\pagebreak
+
 \tableofcontents        % inserts TOC (section, sub-section, etc numbers and titles)
 %\listoftables           % inserts LOT (numbers and captions)
 %\listoffigures          % inserts LOF (numbers and captions)
@@ -36,105 +45,512 @@
 %                        %  \end{figure}, and \caption{}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Where everything else goes
+
 \pagebreak
-\section{How to typeset \textsf{R} code}
 
-If you want to see both the input and output, do this:
+\textbf{Introduction\\}
+In this report I will detail my choice of dataset and the process of creating a model that fits the dataset.
+\section{Data Exploration}
+\subsection{Dataset Choice}
+%For the dataset I opted to use the Mushroom Classification dataset provided by UCI Machine Learning on Kaggle\footnote{\href{https://www.kaggle.com/uciml/mushroom-classification/}{https://www.kaggle.com/uciml/mushroom-classification/}}. I chose this dataset because of its potential practical application in predicting the edibility of a mushroom merely based on characteristics without needing to know the name, merely by describing it can it be identified. This dataset was also featured on Kaggle and came very well recommended. The size of the dataset also made it a suitable choice it was a manageable size with a high variance in the attributes.
+\subsection{Technology Platform}
+The use of big data exploration tools such as Hadoop seemed to be of little merit as the size of this dataset does not warrant it. The source csv is a mere 374 kB with a very manageable 8124 rows of data. In addition the variables are single letters representing certain aspects, this helps cut down on size even further and means we don't need to run any matching or regex on the fields to find our data. All of this lead me to discard any such big data technologies from consideration.
+\subsection{Problem Statement \& Data Exploration}
+\subsubsection{Description}
+The dataset contains a list mushrooms and describes their various characteristic, listed below, along with whether or not they are poisonous or not. The aim of this report is to build a model which will predict to degree of certainty which characteristics of the mushrooms dictate the edibility of the mushrooms.
 
+\subsubsection{Attribute Information}
+
+classes: edible=e, poisonous=p
+
+cap-shape: bell=b,conical=c,convex=x,flat=f, knobbed=k,sunken=s
+
+cap-surface: fibrous=f,grooves=g,scaly=y,smooth=s
+
+cap-color: brown=n,buff=b,cinnamon=c,gray=g,green=r
+,pink=p,purple=u,red=e,white=w,yellow=y
+
+bruises: bruises=t,no=f
+
+odor: almond=a,anise=l,creosote=c,fishy=y,foul=f,
+musty=m,none=n,pungent=p,spicy=s
+
+gill-attachment: attached=a,descending=d,free=f,notched=n
+
+gill-spacing: close=c,crowded=w,distant=d
+
+gill-size: broad=b,narrow=n
+
+gill-color: black=k,brown=n,buff=b,
+chocolate=h,gray=g, green=r,orange=o,
+pink=p,purple=u,red=e,white=w,yellow=y
+
+stalk-shape: enlarging=e,tapering=t
+
+stalk-root: bulbous=b,club=c,cup=u
+,equal=e,rhizomorphs=z,rooted=r,missing=?
+
+stalk-surface-above-ring: fibrous=f,scaly=y,silky=k,smooth=s
+
+stalk-surface-below-ring: fibrous=f,scaly=y,silky=k,smooth=s
+
+stalk-color-above-ring: brown=n,buff=b,cinnamon=c,
+gray=g,orange=o,pink=p,red=e,white=w,yellow=y
+
+stalk-color-below-ring: brown=n,buff=b,cinnamon=c
+,gray=g,orange=o,pink=p,red=e,white=w,yellow=y
+
+veil-type: partial=p,universal=u
+
+veil-color: brown=n,orange=o,white=w,yellow=y
+
+ring-number: none=n,one=o,two=t
+
+ring-type: cobwebby=c,evanescent=e,flaring=f,large=l,
+none=n,pendant=p,sheathing=s,zone=z
+
+spore-print-color: black=k,brown=n,buff=b,chocolate=h,
+green=r,orange=o,purple=u,white=w,yellow=y
+
+population: abundant=a,clustered=c,numerous=n,
+scattered=s,several=v,solitary=y
+
+habitat: grasses=g,leaves=l,meadows=m,paths=p,
+urban=u,waste=w,woods=d
+%#\footnote{taken from the data page found here \href{https://www.kaggle.com/uciml/mushroom-classification/data}{https://www.kaggle.com%
+%#/uciml/mushroom-classification/data}}
+
+
+\pagebreak
+Loading in the dataset:
+\subsubsection{Number of Rows and Columns}
 \begin{Schunk}
 \begin{Sinput}
-> runif(10)
+> options(scipen = 999)
+> df <- read.csv('mushrooms.csv',header = T)
+\end{Sinput}
+\end{Schunk}
+
+\subsubsection{Number of Rows and Columns}
+\begin{Schunk}
+\begin{Sinput}
+> #dim(df)
+> cat('Number of Rows in the set is: ', nrow(df))
 \end{Sinput}
 \begin{Soutput}
- [1] 0.951700400 0.147350547 0.656194884 0.009407798 0.678570091 0.800007238
- [7] 0.383267459 0.311992274 0.142615642 0.402582072
+Number of Rows in the set is:  8124
+\end{Soutput}
+\begin{Sinput}
+> cat('Number of Columns/Features in the set is: ', ncol(df))
+\end{Sinput}
+\begin{Soutput}
+Number of Columns/Features in the set is:  23
 \end{Soutput}
 \end{Schunk}
 
-If you want to see output, but no input, do this:
-
+\subsubsection{Names of Features}
 \begin{Schunk}
+\begin{Sinput}
+> names(df) # names of the columns/features
+\end{Sinput}
 \begin{Soutput}
- [1] 0.87171162 0.15202862 0.76866646 0.53133333 0.70905597 0.07119464
- [7] 0.85124164 0.21932358 0.30450789 0.91938220
+ [1] "class"                    "cap.shape"               
+ [3] "cap.surface"              "cap.color"               
+ [5] "bruises"                  "odor"                    
+ [7] "gill.attachment"          "gill.spacing"            
+ [9] "gill.size"                "gill.color"              
+[11] "stalk.shape"              "stalk.root"              
+[13] "stalk.surface.above.ring" "stalk.surface.below.ring"
+[15] "stalk.color.above.ring"   "stalk.color.below.ring"  
+[17] "veil.type"                "veil.color"              
+[19] "ring.number"              "ring.type"               
+[21] "spore.print.color"        "population"              
+[23] "habitat"                 
 \end{Soutput}
 \end{Schunk}
 
-If you want to see input, but no output, do this:
-
+\subsubsection{Class / Label Distribution}
 \begin{Schunk}
 \begin{Sinput}
-> runif(13)
-\end{Sinput}
-\end{Schunk}
-
-If you want to run some \textsf{R} code but hide the input/output from the reader then you can do both at the same time:
-
-
-\bigskip   % leave some empty space (optional)
-
-and you can double-check that it worked later (if you like)
-
-\begin{Schunk}
-\begin{Sinput}
-> x  # use keep.source=TRUE if you want comments printed
+> table(df$class) # show the distribution 
 \end{Sinput}
 \begin{Soutput}
- [1]  2  3  4  5  6  7  8  9 10 11
-\end{Soutput}
-\begin{Sinput}
-> y
-\end{Sinput}
-\begin{Soutput}
- [1] 0.4527397 0.7465630 0.3143172 0.6611272 0.4862785 0.6339000 0.7735888
- [8] 0.3827385 0.3238573 0.2071869
+   e    p 
+4208 3916 
 \end{Soutput}
 \end{Schunk}
 
-If you want to write some \textsf{R} code but not have it evaluated at all then do this:
+
+\subsubsection{Glance at the Data}
+\begin{Schunk}
+\begin{Sinput}
+> dfs <- df[1:4,] # copy the first four rows into a temporary
+> names(dfs) <- NULL # delete the names of columns so the text output isn't massive
+> head(dfs) # show what the data looks like
+\end{Sinput}
+\begin{Soutput}
+1 p x s n t p f c n k e e s s w w p w o p k s u
+2 e x s y t a f c b k e c s s w w p w o p n n g
+3 e b s w t l f c b n e c s s w w p w o p n n m
+4 p x y w t p f c n n e e s s w w p w o p k s u
+\end{Soutput}
+\end{Schunk}
+
+\subsubsection{Distribution}
+\begin{figure}[H]
+\begin{center}
+\begin{Schunk}
+\begin{Sinput}
+> # plot the amount of edible vs. poisonous mushrooms in the set
+> barplot(
++ 	table(df$class), col = c('lightblue', 'grey'), 
++ 	names.arg = c('edible', 'poisonous'), xpd = FALSE, 
++ 	ylim = c(3500, 4500), offset(3000), main = "Edible vs. Poisonous")
+\end{Sinput}
+\end{Schunk}
+\caption {Amount of edible vs. poisonous in the data set}
+\label{fig1}
+\end {center}
+\end {figure}
+
+\subsubsection{Graphing}
+\begin{Schunk}
+\begin{Sinput}
+> library(caret)
+> # define the layout of the graphs
+> xy <- list(x=list(relation='free'), y=list(relation='free'))
+\end{Sinput}
+\end{Schunk}
+\begin{figure}[H]
+\begin{center}
+\begin{Schunk}
+\begin{Sinput}
+> # plot the data on a density graph
+> # this works by converting all of the features except the class to a number
+> #  then using the class as the class
+> featurePlot(
++ 	sapply(df[,-c(df$class)], function (x) as.numeric(x)),
++ 	df$class, plot='density', scales=xy, layout = c(4,6),
++ 	pch = '|', frame = F)
+\end{Sinput}
+\end{Schunk}
+\caption {Correlation between edible and poisonous by feature}
+\label{fig2}
+\end {center}
+\end {figure}
+As the graphs above show there is no perfect separation between the features. The best place to find any separation are the features odor, spore.print.color, ring.type, population, habitat. A number of the values show a very close relationship and this are of little consequence in judging the class such as, like veil.type, cap.shape, cap.color and gill.attachment.
+\pagebreak\begin{figure}[H]
+\begin{center}
+\begin{Schunk}
+\begin{Sinput}
+> ggplot(data = df, aes(x = spore.print.color, y = odor, color = class)) + 
++ 	geom_jitter() + scale_color_manual(
++ 		values = c('lightblue', 'grey')
++ 	)
+\end{Sinput}
+\end{Schunk}
+\caption {Showing the disparity between odor and spore.print.color}
+\label{fig3}
+\end {center}
+\end {figure}
+If we plot our two most prevalent features we can see they have very clear separation and will be the primary features our model uses to determine the class.
+\pagebreak\subsection{Pre-proccessing}
+\begin{Schunk}
+\begin{Sinput}
+> length(unique(is.na(df))) # the length of the unique values for each col
+\end{Sinput}
+\begin{Soutput}
+[1] 23
+\end{Soutput}
+\end{Schunk}
+Since our dataset doesn't have any missing values we don't need to worry about handling and null values or missing rows.
 
 \begin{Schunk}
 \begin{Sinput}
-> # whatever you write here must be syntactically correct R code
-> runif(1000000000000000000000000)
+> # loop through all of the features and show the amount of uniqe values
+> for (i in names(df)) { cat (i, ':', length(unique(df[[i]])), '\n')}
+\end{Sinput}
+\begin{Soutput}
+class : 2 
+cap.shape : 6 
+cap.surface : 4 
+cap.color : 10 
+bruises : 2 
+odor : 9 
+gill.attachment : 2 
+gill.spacing : 2 
+gill.size : 2 
+gill.color : 12 
+stalk.shape : 2 
+stalk.root : 5 
+stalk.surface.above.ring : 4 
+stalk.surface.below.ring : 4 
+stalk.color.above.ring : 9 
+stalk.color.below.ring : 9 
+veil.type : 1 
+veil.color : 4 
+ring.number : 3 
+ring.type : 5 
+spore.print.color : 9 
+population : 6 
+habitat : 7 
+\end{Soutput}
+\end{Schunk}
+Because we only have one 'veil type' across all of our mushrooms we can disregard this column.
+\begin{Schunk}
+\begin{Sinput}
+> df <- (df[-c(17)]) # drop the veil type from the set
 \end{Sinput}
 \end{Schunk}
 
-If you would like to include a figure that's generated completely by \textsf{R} code, then you can do something like the following.
+Here we will turn all of the values from letters to a numerical value
+\begin{Schunk}
+\begin{Sinput}
+> # run the as numeric function on each value
+> df <- data.frame(sapply(df, function (x) as.numeric(x)))
+> head(df$class, n = 1) # show that class comes out as 1 and 2
+\end{Sinput}
+\begin{Soutput}
+[1] 2
+\end{Soutput}
+\begin{Sinput}
+> df$class <- sapply(df$class, function (x) x - 1) # make class binary
+\end{Sinput}
+\end{Schunk}
 
+
+\section{Modelling / Classification}
+I will be using the Random Forest model to handle the data as it is likely to have the highest success rate in predict whether or not the mushrooms are edible or not.
+
+\subsection{Building Model}
+\subsubsection{Divide The Dataset}
+Split the dataset with 70\% for training and the remainder for testing the model
+\begin{Schunk}
+\begin{Sinput}
+> i <- sample(nrow(df), 0.7 * nrow(df)) # get 70% of the elements
+> train = df[i,] # get all the rows that match i
+> test =  df[-i,] # get all minus i
+\end{Sinput}
+\end{Schunk}
+\subsubsection{Building the Model}
+\begin{Schunk}
+\begin{Sinput}
+> library(randomForest,warn.conflicts = FALSE)
+> set.seed(77) # set the seed for reproducibility
+> # use randomForest on our training set
+> forest <- randomForest(as.factor(class) ~ . ,
++                           data = train, importance = T, ntree = 50)
+> pre <- predict(forest, test) # use our model to predict the test set
+> # create a new set from our prediction
+> sol <- data.frame(class = test$class, edible = pre)
+\end{Sinput}
+\end{Schunk}
+\subsection{Testing and Evaluation}
+\begin{Schunk}
+\begin{Sinput}
+> print(forest)
+\end{Sinput}
+\begin{Soutput}
+Call:
+ randomForest(formula = as.factor(class) ~ ., data = train, importance = T,      ntree = 50) 
+               Type of random forest: classification
+                     Number of trees: 50
+No. of variables tried at each split: 4
+
+        OOB estimate of  error rate: 0%
+Confusion matrix:
+     0    1 class.error
+0 2930    0           0
+1    0 2756           0
+\end{Soutput}
+\end{Schunk}
+Using all of the features of the dataset we are able to be one hundred percent accurate with our predictions.
+
+\begin{Schunk}
+\begin{Sinput}
+> table(pre == test$class) # show the amount of matches
+\end{Sinput}
+\begin{Soutput}
+TRUE 
+2438 
+\end{Soutput}
+\end{Schunk}
+\pagebreak
+Quickly testing whether our test dataset matches our prediction of the test dataset, which it does.
+\begin{figure}[H]
+\begin{center}
+%<<fig = TRUE, warning = FALSE, message = FALSE, echo = TRUE, results =' hide', out.width= '.8\\linewidth'>>=
+\begin{Schunk}
+\begin{Sinput}
+> plot(forest, main = 'Error Rate For Initial Model', frame = F, col = 'blue')
+\end{Sinput}
+\end{Schunk}
+\caption {Error rate for the initial random forest model using all features}
+\label{fig4}
+\end {center}
+\end {figure}
+The graph shows us that it takes approximately thirty tree's before the model is able to be a hundred percent accurate.
+
+\pagebreak\subsubsection{Importance}
+\begin{figure}[H]
+\begin{center}
+%<<fig = TRUE, warning = FALSE, message = FALSE, echo = TRUE, results ='hide', out.width= '.8\\linewidth'>>=
+\begin{Schunk}
+\begin{Sinput}
+> varImpPlot(forest, main = 'Importance Rating by Feature', frame = F)
+\end{Sinput}
+\end{Schunk}
+\caption {Importance Rating For Each Feature}
+\label{fig5}
+\end {center}
+\end {figure}
+This graph shows the importance of each of the features when predicting the edibility of the mushroom. From this graph we can see a number of features are unimportant to the model such as veil.color, gill.attachment, etc. these can effectively be ignored in the model without much or any effect on the accuracy of the model.
+
+\pagebreak\subsubsection{Confusion Matrix}
+\begin{Schunk}
+\begin{Sinput}
+> #confusionMatrix(pre, test$class) # gen a confusion matrix on our prediction
+\end{Sinput}
+\end{Schunk}
+We can see here that the accuracy is rated at 100\% which is supported by what we have seen from our prediction data when compared to the test data. From all of this we can be fairly sure in our assertion that our model is entirely accurate.
+
+\pagebreak\section{Improving Performance}
+\subsection{Shrinking The Input Features}
+By looking at the graph of importance from our original model we can select the most important features
+\begin{Schunk}
+\begin{Sinput}
+> # reduce the amount of features we give the randomForest
+> forSmall <- randomForest(as.factor(class) ~ odor + gill.color + gill.size +
++ 		spore.print.color + ring.type + stalk.root + habitat + population + bruises,
++ 	data = train, ntree = 50)
+\end{Sinput}
+\end{Schunk}
+
+We can see that this new model still maintains the same level of accuracy. It is possible to achieve the same accuracy with one less feature however on some iterations of randomForest it would return with a 0.02\% error rate
+\begin{Schunk}
+\begin{Sinput}
+> print(forSmall) # print out the forest so we can see the accuracy
+\end{Sinput}
+\begin{Soutput}
+Call:
+ randomForest(formula = as.factor(class) ~ odor + gill.color +      gill.size + spore.print.color + ring.type + stalk.root +      habitat + population + bruises, data = train, ntree = 50) 
+               Type of random forest: classification
+                     Number of trees: 50
+No. of variables tried at each split: 3
+
+        OOB estimate of  error rate: 0%
+Confusion matrix:
+     0    1 class.error
+0 2930    0           0
+1    0 2756           0
+\end{Soutput}
+\end{Schunk}
+
+And if we test this model in a prediction and compare that with our test dataset
+\begin{Schunk}
+\begin{Sinput}
+> table(predict(forSmall, test) == test$class) # check a prediction against the test data
+\end{Sinput}
+\begin{Soutput}
+TRUE 
+2438 
+\end{Soutput}
+\end{Schunk}
+We can see it does indeed match
+\pagebreak
+\begin{figure}[H]
+\begin{center}
+%<<fig=TRUE,warning=FALSE,message=FALSE,echo=TRUE, results='hide',out.width='.8\\linewidth'>>=
+\begin{Schunk}
+\begin{Sinput}
+> plot(forSmall, main = 'Error Rate With Less Features', frame = F, col = 'blue')
+\end{Sinput}
+\end{Schunk}
+\caption {Error rate for random forest model using only the most important features}
+\label{fig6}
+\end {center}
+\end {figure}
+
+\subsection{Using a Conditional Tree To Compare}
+\subsubsection{Train The Method}
+\begin{Schunk}
+\begin{Sinput}
+> #ct <- train(as.factor(class) ~ . , data = train, method ='ctree') # train using ctree
+\end{Sinput}
+\end{Schunk}
+
+\subsubsection{Predict With The Model}
+\begin{Schunk}
+\begin{Sinput}
+> #ctpre <- predict(ct, test) # make a predeiction 
+\end{Sinput}
+\end{Schunk}
+
+\subsubsection{Evaluate the accuracy}
+\begin{Schunk}
+\begin{Sinput}
+> #confusionMatrix(ctpre, test$class) # compare prediction to the test
+> #table(ctpre == test$class) # show how many are correct
+\end{Sinput}
+\end{Schunk}
+This shows us that the the method is not 100\% accurate though the margin of error is very small at less than 1\%.
+
+\subsection{Change Test/Train Scale}
+For this section I will reduce the training size for our random forest model to see if it still maintains a high level of accuracy. If we see a fall in accuracy then we know that our original method was subject to over fitting and will need tuning.
+\subsubsection{Build With Redefined Scale}
+\begin{Schunk}
+\begin{Sinput}
+> ismall <- sample(nrow(df), 0.1 * nrow(df)) # get 10% of the elements
+> trsmall = df[ismall,]
+> tesmall = df[-ismall,]
+> fsmall <- randomForest(as.factor(class) ~ . ,
++                           data = trsmall, importance = T, ntree = 50)
+> presmall <- predict(forest, tesmall) 
+> solsmall <- data.frame(class = tesmall$class, edible = presmall)
+\end{Sinput}
+\end{Schunk}
+
+\subsubsection{Analyse The Results}
+\begin{Schunk}
+\begin{Sinput}
+> print(fsmall)
+\end{Sinput}
+\begin{Soutput}
+Call:
+ randomForest(formula = as.factor(class) ~ ., data = trsmall,      importance = T, ntree = 50) 
+               Type of random forest: classification
+                     Number of trees: 50
+No. of variables tried at each split: 4
+
+        OOB estimate of  error rate: 0.12%
+Confusion matrix:
+    0   1 class.error
+0 415   0 0.000000000
+1   1 396 0.002518892
+\end{Soutput}
+\begin{Sinput}
+> #table(presmall == tesmall$class) 
+\end{Sinput}
+\end{Schunk}
+As we can see, the model still retains it's 100\% accuracy rating even with only 10\% of the the dataset for training. This means that we aren't suffering from any over fitting.
+
+
+\pagebreak
 \begin{figure}
-\includegraphics{coursework-007}
-\caption{Here is the plot we made}
-\end{figure}
-
-
-Sometimes we would like the output to look like \LaTeX\ output instead of \textsf{R} output.  In that case, do the following.
-
+\begin{center}
+%<<fig = TRUE, warning = FALSE, message = FALSE, echo = TRUE, results =' hide', out.width= '.8\\linewidth'>>=
 \begin{Schunk}
 \begin{Sinput}
-> library(xtable)
-> xtable(summary(lm(y ~ x)), caption = "Here is the table we made")
+> plot(fsmall, main = 'Error Rate For Smaller Training Set', frame = F, col = 'blue')
 \end{Sinput}
-% latex table generated in R 3.5.1 by xtable 1.8-3 package
-% Fri Oct 19 15:31:55 2018
-\begin{table}[ht]
-\centering
-\begin{tabular}{rrrrr}
-  \hline
- & Estimate & Std. Error & t value & Pr($>$$|$t$|$) \\ 
-  \hline
-(Intercept) & 0.6693 & 0.1489 & 4.49 & 0.0020 \\ 
-  x & -0.0263 & 0.0210 & -1.26 & 0.2446 \\ 
-   \hline
-\end{tabular}
-\caption{Here is the table we made} 
-\end{table}\end{Schunk}
+\end{Schunk}
+\caption {Error rate for random forest model using a smaller training set}
+\label{fig7}
+\end {center}
+\end {figure}
+Again, we see that around thirty decision tree's are required to hit a 100\% success rate which is in line with what we saw when using a 70/30 split.
 
-\pagebreak 
-\section{How to typeset \textsf{R} code}
-\pagebreak 
-\section{How to typeset \textsf{R} code}
-
-
+\subsection{Conclusion}
+The above should show that the original model, using all of the features and a large training set may have been overkill but none the less is still flawless with this dataset. It does not suffer from over fitting or edge cases throwing it out. 
+I believe that random forest was the right choice of model for this dataset, as it is able to reliably be 100\% accurate even while restricting the inputs somewhat and it beats the correlation tree by comparison, and though the margin here is small, since we are dealing with potentially serious or fatal poisons here the 0.02\% is pretty undesirable.
 \end{document}
-

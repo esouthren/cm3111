@@ -1,3 +1,31 @@
-\contentsline {section}{\numberline {1}How to typeset \textsf {R} code}{3}
-\contentsline {section}{\numberline {2}How to typeset \textsf {R} code}{5}
-\contentsline {section}{\numberline {3}How to typeset \textsf {R} code}{6}
+\contentsline {section}{\numberline {1}Data Exploration}{4}
+\contentsline {subsection}{\numberline {1.1}Dataset Choice}{4}
+\contentsline {subsection}{\numberline {1.2}Technology Platform}{4}
+\contentsline {subsection}{\numberline {1.3}Problem Statement \& Data Exploration}{4}
+\contentsline {subsubsection}{\numberline {1.3.1}Description}{4}
+\contentsline {subsubsection}{\numberline {1.3.2}Attribute Information}{4}
+\contentsline {subsubsection}{\numberline {1.3.3}Number of Rows and Columns}{5}
+\contentsline {subsubsection}{\numberline {1.3.4}Number of Rows and Columns}{5}
+\contentsline {subsubsection}{\numberline {1.3.5}Names of Features}{5}
+\contentsline {subsubsection}{\numberline {1.3.6}Class / Label Distribution}{5}
+\contentsline {subsubsection}{\numberline {1.3.7}Glance at the Data}{5}
+\contentsline {subsubsection}{\numberline {1.3.8}Distribution}{6}
+\contentsline {subsubsection}{\numberline {1.3.9}Graphing}{6}
+\contentsline {subsection}{\numberline {1.4}Pre-proccessing}{8}
+\contentsline {section}{\numberline {2}Modelling / Classification}{8}
+\contentsline {subsection}{\numberline {2.1}Building Model}{9}
+\contentsline {subsubsection}{\numberline {2.1.1}Divide The Dataset}{9}
+\contentsline {subsubsection}{\numberline {2.1.2}Building the Model}{9}
+\contentsline {subsection}{\numberline {2.2}Testing and Evaluation}{9}
+\contentsline {subsubsection}{\numberline {2.2.1}Importance}{11}
+\contentsline {subsubsection}{\numberline {2.2.2}Confusion Matrix}{12}
+\contentsline {section}{\numberline {3}Improving Performance}{13}
+\contentsline {subsection}{\numberline {3.1}Shrinking The Input Features}{13}
+\contentsline {subsection}{\numberline {3.2}Using a Conditional Tree To Compare}{14}
+\contentsline {subsubsection}{\numberline {3.2.1}Train The Method}{14}
+\contentsline {subsubsection}{\numberline {3.2.2}Predict With The Model}{14}
+\contentsline {subsubsection}{\numberline {3.2.3}Evaluate the accuracy}{14}
+\contentsline {subsection}{\numberline {3.3}Change Test/Train Scale}{14}
+\contentsline {subsubsection}{\numberline {3.3.1}Build With Redefined Scale}{14}
+\contentsline {subsubsection}{\numberline {3.3.2}Analyse The Results}{14}
+\contentsline {subsection}{\numberline {3.4}Conclusion}{16}

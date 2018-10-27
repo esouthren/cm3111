@@ -1,5 +1,5 @@
 library(randomForest)
-library(ggplot2)
+
 data <- read.csv('mushrooms.csv')
 names <- names(data)
 cat('Number of rows: ', nrow(data))
@@ -14,7 +14,7 @@ for (i in 1:length(names)){
 data$class <- as.factor(data$class)
 partition <- sample(nrow(data), 0.7 * nrow(data))
 train <- data[partition,]
-test <- data[-partition,]
+# test <- data[-partition,]
 
 # test various numbers of trees
 
@@ -36,14 +36,16 @@ for (i in 1:10){
   # Test the RF model for this run
   preds <- levels(train[,14])[RFModel$test$predicted]
   # compute accuracy
-  auc <- (sum(preds ==test[,14])/nrow(testing))*100
+  auc <- (sum(preds==test[,14])/nrow(testing))*100
   df <- rbind(df, data.frame(NTrees=ntrees,Accuracy=auc))
   ntrees <- ntrees + 100
 }
 
-
+library(ggplot2)
 p <- ggplot(data, aes(x=NTrees, y=Accuracy))
 p <- p + geom_line() + geom_point()
 p <- p + xlim(100,1000)
 p <- p + theme_bw()
 p
+
+
