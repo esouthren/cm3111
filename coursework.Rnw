@@ -1,6 +1,6 @@
-\documentclass[10pt]{article}         % the type of document and font size (default 10pt)
+\documentclass[12pt]{article}         % the type of document and font size (default 10pt)
 \usepackage[noae]{Sweave} 
-\usepackage{arev}
+%\usepackage{arev}                    % change font
 \usepackage[margin=1.0in]{geometry}   % sets all margins to 1in, can be changed
 \usepackage{moreverb}                 % for verbatimtabinput -- LaTeX environment
 \usepackage{url}                      % for \url{} command
@@ -9,24 +9,16 @@
 \usepackage{longtable}                % for tables that break over multiple pages
 %\usepackage{caret}
 \usepackage{float}
-
+\thispagestyle{empty}
 \title{\Huge Title of Coursework \\[0.5in] \large CM3111: Big Data Analysis Coursework \\[2in]}  % to specify title
 
 \author{Eilidh Southren \\[0.25in] Student ID: 1513195\\[3in]}          % to specify author(s)
 
 \date{November 2018}
-\begin{document}                      % document begins here
+\begin{document}      
+\thispagestyle{empty}% document begins here
 \SweaveOpts{concordance=TRUE}
 \SweaveSyntax{SweaveSyntaxNoweb}
-
-% If .nw file contains graphs: To specify that EPS/PDF graph files are to be 
-% saved to 'graphics' sub-folder
-%     NOTE: 'graphics' sub-folder must exist prior to Sweave step
-%\SweaveOpts{prefix.string=graphics/plot}
-
-% If .nw file contains graphs: to modify (shrink/enlarge} size of graphics 
-% file inserted
-%         NOTE: can be specified/modified before any graph chunk
 \setkeys{Gin}{width=1.0\textwidth}
 
 \maketitle              % makes the title
@@ -40,27 +32,29 @@
 \pagebreak
 
 \tableofcontents        % inserts TOC (section, sub-section, etc numbers and titles)
-%\listoftables           % inserts LOT (numbers and captions)
-%\listoffigures          % inserts LOF (numbers and captions)
-%                        %     NOTE: graph chunk must be wrapped with \begin{figure}, 
-%                        %  \end{figure}, and \caption{}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Where everything else goes
 
 \pagebreak
 
-\textbf{Introduction\\}
-In this report I will detail my choice of dataset and the process of creating a model that fits the dataset.
-\section{Data Exploration}
+\section{Introduction}
+This report outlines an analysis of a given data set in order to predict values. By exploring and selecting an appropriate machine learning algorithm, we can train a model based on our data set, and analyse the success of the model. 
+\newpage
+
+\section{The Dataset}
+
 \subsection{Dataset Choice}
-%For the dataset I opted to use the Mushroom Classification dataset provided by UCI Machine Learning on Kaggle\footnote{\href{https://www.kaggle.com/uciml/mushroom-classification/}{https://www.kaggle.com/uciml/mushroom-classification/}}. I chose this dataset because of its potential practical application in predicting the edibility of a mushroom merely based on characteristics without needing to know the name, merely by describing it can it be identified. This dataset was also featured on Kaggle and came very well recommended. The size of the dataset also made it a suitable choice it was a manageable size with a high variance in the attributes.
-\subsection{Technology Platform}
+modify this paragraph
+For the dataset I opted to use the Mushroom Classification dataset provided by UCI Machine Learning on Kaggle. I chose this dataset because of its potential practical application in predicting the edibility of a mushroom merely based on characteristics without needing to know the name, merely by describing it can it be identified. This dataset was also featured on Kaggle and came very well recommended. The size of the dataset also made it a suitable choice it was a manageable size with a high variance in the attributes.
+\subsection{Problem Statement}
+Can we predict whether a mushroom is poisonous based on its characteristics?
+\subsection{Platform Choice}
+modify
 The use of big data exploration tools such as Hadoop seemed to be of little merit as the size of this dataset does not warrant it. The source csv is a mere 374 kB with a very manageable 8124 rows of data. In addition the variables are single letters representing certain aspects, this helps cut down on size even further and means we don't need to run any matching or regex on the fields to find our data. All of this lead me to discard any such big data technologies from consideration.
-\subsection{Problem Statement \& Data Exploration}
-\subsubsection{Description}
-The dataset contains a list mushrooms and describes their various characteristic, listed below, along with whether or not they are poisonous or not. The aim of this report is to build a model which will predict to degree of certainty which characteristics of the mushrooms dictate the edibility of the mushrooms.
+\subsection{Data Exploration}
+
+What follows is an overview of the characterists and defining features of the dataset.
 
 \subsubsection{Attribute Information}
+This dataset is labelled because.... the other attributes are....
 
 classes: edible=e, poisonous=p
 
@@ -118,19 +112,15 @@ scattered=s,several=v,solitary=y
 
 habitat: grasses=g,leaves=l,meadows=m,paths=p,
 urban=u,waste=w,woods=d
-%#\footnote{taken from the data page found here \href{https://www.kaggle.com/uciml/mushroom-classification/data}{https://www.kaggle.com%
-%#/uciml/mushroom-classification/data}}
 
-
-\pagebreak
 Loading in the dataset:
-\subsubsection{Number of Rows and Columns}
+
 <<>>=
 options(scipen = 999)
 df <- read.csv('mushrooms.csv',header = T)
 @
 
-\subsubsection{Number of Rows and Columns}
+\subsubsection{Data Size}
 <<>>=
 #dim(df)
 cat('Number of Rows in the set is: ', nrow(df))
@@ -142,13 +132,13 @@ cat('Number of Columns/Features in the set is: ', ncol(df))
 names(df) # names of the columns/features
 @
 
-\subsubsection{Class / Label Distribution}
+\subsubsection{Distribution of Attributes}
 <<>>=
 table(df$class) # show the distribution 
 @
 
 
-\subsubsection{Glance at the Data}
+\subsubsection{Sample Data}
 <<>>=
 dfs <- df[1:4,] # copy the first four rows into a temporary
 names(dfs) <- NULL # delete the names of columns so the text output isn't massive
@@ -205,7 +195,10 @@ ggplot(data = df, aes(x = spore.print.color, y = odor, color = class)) +
 \end {center}
 \end {figure}
 If we plot our two most prevalent features we can see they have very clear separation and will be the primary features our model uses to determine the class.
-\pagebreak\subsection{Pre-proccessing}
+\pagebreak
+
+\subsection{Pre-proccessing the Dataset}
+Things we need to do in order to use the data....
 <<>>=
 length(unique(is.na(df))) # the length of the unique values for each col
 @

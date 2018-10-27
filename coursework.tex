@@ -1,6 +1,6 @@
-\documentclass[10pt]{article}         % the type of document and font size (default 10pt)
+\documentclass[12pt]{article}         % the type of document and font size (default 10pt)
 \usepackage[noae]{Sweave} 
-\usepackage{arev}
+%\usepackage{arev}                    % change font
 \usepackage[margin=1.0in]{geometry}   % sets all margins to 1in, can be changed
 \usepackage{moreverb}                 % for verbatimtabinput -- LaTeX environment
 \usepackage{url}                      % for \url{} command
@@ -9,13 +9,14 @@
 \usepackage{longtable}                % for tables that break over multiple pages
 %\usepackage{caret}
 \usepackage{float}
-
+\thispagestyle{empty}
 \title{\Huge Title of Coursework \\[0.5in] \large CM3111: Big Data Analysis Coursework \\[2in]}  % to specify title
 
 \author{Eilidh Southren \\[0.25in] Student ID: 1513195\\[3in]}          % to specify author(s)
 
 \date{November 2018}
-\begin{document}                      % document begins here
+\begin{document}      
+\thispagestyle{empty}% document begins here
 \input{coursework-concordance}
 
 % If .nw file contains graphs: To specify that EPS/PDF graph files are to be 
@@ -39,24 +40,24 @@
 \pagebreak
 
 \tableofcontents        % inserts TOC (section, sub-section, etc numbers and titles)
-%\listoftables           % inserts LOT (numbers and captions)
-%\listoffigures          % inserts LOF (numbers and captions)
-%                        %     NOTE: graph chunk must be wrapped with \begin{figure}, 
-%                        %  \end{figure}, and \caption{}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Where everything else goes
 
 \pagebreak
 
-\textbf{Introduction\\}
-In this report I will detail my choice of dataset and the process of creating a model that fits the dataset.
-\section{Data Exploration}
+\section{Introduction}
+This report outlines an analysis of a given data set in order to predict values. By exploring and selecting an appropriate machine learning algorithm, we can train a model based on our data set, and analyse the success of the model. 
+\newpage
+
+\section{The Dateset}
+
 \subsection{Dataset Choice}
-%For the dataset I opted to use the Mushroom Classification dataset provided by UCI Machine Learning on Kaggle\footnote{\href{https://www.kaggle.com/uciml/mushroom-classification/}{https://www.kaggle.com/uciml/mushroom-classification/}}. I chose this dataset because of its potential practical application in predicting the edibility of a mushroom merely based on characteristics without needing to know the name, merely by describing it can it be identified. This dataset was also featured on Kaggle and came very well recommended. The size of the dataset also made it a suitable choice it was a manageable size with a high variance in the attributes.
-\subsection{Technology Platform}
+modify this paragraph
+For the dataset I opted to use the Mushroom Classification dataset provided by UCI Machine Learning on Kaggle. I chose this dataset because of its potential practical application in predicting the edibility of a mushroom merely based on characteristics without needing to know the name, merely by describing it can it be identified. This dataset was also featured on Kaggle and came very well recommended. The size of the dataset also made it a suitable choice it was a manageable size with a high variance in the attributes.
+\subsection{Platform Choice}
+modify
 The use of big data exploration tools such as Hadoop seemed to be of little merit as the size of this dataset does not warrant it. The source csv is a mere 374 kB with a very manageable 8124 rows of data. In addition the variables are single letters representing certain aspects, this helps cut down on size even further and means we don't need to run any matching or regex on the fields to find our data. All of this lead me to discard any such big data technologies from consideration.
 \subsection{Problem Statement \& Data Exploration}
 \subsubsection{Description}
+modify
 The dataset contains a list mushrooms and describes their various characteristic, listed below, along with whether or not they are poisonous or not. The aim of this report is to build a model which will predict to degree of certainty which characteristics of the mushrooms dictate the edibility of the mushrooms.
 
 \subsubsection{Attribute Information}
@@ -360,8 +361,8 @@ No. of variables tried at each split: 4
         OOB estimate of  error rate: 0%
 Confusion matrix:
      0    1 class.error
-0 2930    0           0
-1    0 2756           0
+0 2921    0           0
+1    0 2765           0
 \end{Soutput}
 \end{Schunk}
 Using all of the features of the dataset we are able to be one hundred percent accurate with our predictions.
@@ -441,8 +442,8 @@ No. of variables tried at each split: 3
         OOB estimate of  error rate: 0%
 Confusion matrix:
      0    1 class.error
-0 2930    0           0
-1    0 2756           0
+0 2921    0           0
+1    0 2765           0
 \end{Soutput}
 \end{Schunk}
 
@@ -522,11 +523,11 @@ Call:
                      Number of trees: 50
 No. of variables tried at each split: 4
 
-        OOB estimate of  error rate: 0.12%
+        OOB estimate of  error rate: 0%
 Confusion matrix:
     0   1 class.error
-0 415   0 0.000000000
-1   1 396 0.002518892
+0 422   0           0
+1   0 390           0
 \end{Soutput}
 \begin{Sinput}
 > #table(presmall == tesmall$class) 
